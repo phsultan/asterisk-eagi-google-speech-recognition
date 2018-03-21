@@ -1,4 +1,4 @@
-# Transcribe audio coming in Asterisk using Google Speech Recognition
+# Transcribe audio in Asterisk with Google Speech Recognition
 
 This repository is an example of how to use Google Speech Recogntion in Asterisk to transcribe audio voice.
 
