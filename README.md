@@ -1,6 +1,6 @@
 # Transcribe audio in Asterisk with Google Speech Recognition
 
-This repository is an example of how to use Google Speech Recogntion in Asterisk to transcribe audio voice.
+This repository is an example of how to use Google Speech Recogntion in Asterisk to transcribe audio voice. The EAGI (Extended Asterisk Gateway Interface) program in this repository basically gets the audio input stream as a file descriptor, passes it to a Node.js Google Cloud Speech client and sets an Asterisk dialplan variable to return the transcription result to the dialplan.
 
 ## Requirements
 
