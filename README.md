@@ -4,8 +4,8 @@ This repository is an example of how to use Google Speech Recogntion in Asterisk
 
 ## Requirements
 
-- set up your Google Cloud Speech project along with a Service Account key at https://cloud.google.com/speech/
-- install Node.js Google Cloud Speech client at https://github.com/googleapis/nodejs-speech
+- Set up your Google Cloud Speech project along with a Service Account key at https://cloud.google.com/speech/
+- Install Node.js Google Cloud Speech client at https://github.com/googleapis/nodejs-speech
 
 ## How to use this repository
 
