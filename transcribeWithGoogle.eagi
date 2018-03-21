@@ -1,0 +1,80 @@
+#!/bin/bash
+
+declare -a array
+while read -e ARG && [ "$ARG" ] ; do
+        array=(` echo $ARG | sed -e 's/://'`)
+        export ${array[0]}=${array[1]}
+done
+
+# First argument is language
+case "$1" in
+"fr-FR" | "en-GB" | "es-ES" | "it-IT" )
+  LANG=$1
+  ;;
+*)
+  LANG=en-US
+  ;;
+esac
+
+DURATION=$2
+SAMPLE_RATE=8000
+SAMPLE_SIZE_BYTES=2
+let "SAMPLE_SIZE_BITS = SAMPLE_SIZE_BYTES * 8"
+
+echo "GET VARIABLE EAGI_AUDIO_FORMAT"
+read line
+EAGI_AUDIO_FORMAT=$(echo $line | sed -r 's/.*\((.*)\).*/\1/')
+
+# 5 seconds of audio input are gathered in ( SAMPLE_RATE / sample_size ) * 5 bytes
+# - SAMPLE_RATE is set as per EAGI_AUDIO_FORMAT
+# - sample_size is set to 2 (16 bits per sample)
+
+
+case "${EAGI_AUDIO_FORMAT}" in
+"slin48")
+  SAMPLE_RATE=48000
+  ;;
+*)
+  SAMPLE_RATE=8000
+  ;;
+esac
+
+AUDIO_FILE=/tmp/audio-${SAMPLE_SIZE_BITS}_bits-${SAMPLE_RATE}_hz-${DURATION}_sec.raw
+
+# By default, dd stores blocks of 512 bytes
+let "COUNT = SAMPLE_RATE * SAMPLE_SIZE_BYTES * DURATION"
+let "BLOCKS = COUNT / 512"
+echo "exec noop \"Number of bytes to store : ${COUNT}\""
+read line
+
+echo "exec noop \"Number of dd blocks to store : ${BLOCKS}\""
+read line
+
+echo "exec playback \"beep\""
+read line
+
+#sleep ${DURATION}
+dd if=/dev/fd/3 count=${BLOCKS} of=${AUDIO_FILE}
+echo "exec noop \"File saved !\""
+
+echo "exec noop \"AUDIO_FILE : ${AUDIO_FILE}\""
+read line
+echo "exec noop \"SAMPLE_RATE : ${SAMPLE_RATE}\""
+read line
+echo "exec noop \"LANG : ${LANG}\""
+read line
+
+export GOOGLE_APPLICATION_CREDENTIALS=/usr/local/node_programs/service_account_file.json
+RES=$(/usr/local/bin/node /usr/local/node_programs/nodejs-speech/samples/recognize.js sync ${AUDIO_FILE} -e LINEAR16 -r ${SAMPLE_RATE} -l ${LANG})
+
+# clean up result returned from recognize.js :
+# - remove new lines
+# - remove 'Transcription :' header
+RES=$(echo $RES | tr -d '\n' | sed -e 's/Transcription: \(.*$\)/\1/')
+
+echo "set variable GOOGLE_TRANSCRIPTION_RESULT \"${RES}\""
+read line
+
+/bin/rm -f ${AUDIO_FILE}
+
+exit 0
