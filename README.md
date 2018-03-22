@@ -44,6 +44,9 @@ exten = 6500,1,verbose(1, "User ${CALLERID(num)} dialed extension 6500. Testing 
  same = n,noop(CHANNEL(audioreadformat) : ${CHANNEL(audioreadformat)})
  same = n,answer
  same = n,execif($[ "${CHANNEL(audioreadformat)}" = "opus" ]?set(EAGI_AUDIO_FORMAT=slin48):noop(Won't set EAGI_AUDIO_FORMAT))
+ ; Usage : eagi(transcribeWithGoogle.eagi,<language>,<timeout>)
+ ; <language> : en-US, fr-FR, etc.
+ ; <timeout>  : the time to record audio input, in seconds
  same = n,eagi(transcribeWithGoogle.eagi,fr-FR,2)
  same = n,noop(GOOGLE_TRANSCRIPTION_RESULT : ${GOOGLE_TRANSCRIPTION_RESULT})
  same = n,hangup()
@@ -51,4 +54,4 @@ exten = 6500,1,verbose(1, "User ${CALLERID(num)} dialed extension 6500. Testing 
 
 Copy the `transcribeWithGoogle.eagi` of this repository to `/var/lib/asterisk/agi-bin/transcribeWithGoogle.eagi`.
 
-Call extension 6500 and inspect your Asterisk CLI to get the transcription, the `EAGI` script assigns the transcriptio result to the `GOOGLE_TRANSCRIPTION_RESULT` variable.
+Call extension 6500 and inspect your Asterisk CLI to get the transcription, the `EAGI` script assigns the resulting text to the `GOOGLE_TRANSCRIPTION_RESULT` variable.
