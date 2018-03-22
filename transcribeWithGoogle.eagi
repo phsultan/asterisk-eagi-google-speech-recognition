@@ -17,6 +17,8 @@ case "$1" in
   ;;
 esac
 
+NODECMD=$(which node)
+
 # Second argument is a timeout, in seconds. The duration to wait for voice input form the caller.
 DURATION=$2
 SAMPLE_RATE=8000
@@ -77,7 +79,7 @@ read line
 
 # Submit audio to Google Cloud Speech API and get the result
 export GOOGLE_APPLICATION_CREDENTIALS=/usr/local/node_programs/service_account_file.json
-RES=$(/usr/local/bin/node /usr/local/node_programs/nodejs-speech/samples/recognize.js sync ${AUDIO_FILE} -e LINEAR16 -r ${SAMPLE_RATE} -l ${LANG})
+RES=$(${NODECMD} /usr/local/node_programs/nodejs-speech/samples/recognize.js sync ${AUDIO_FILE} -e LINEAR16 -r ${SAMPLE_RATE} -l ${LANG})
 
 # clean up result returned from recognize.js :
 # - remove new lines
