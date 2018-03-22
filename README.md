@@ -1,15 +1,41 @@
 # Transcribe audio in Asterisk with Google Speech Recognition
 
-This repository is an example of how to use Google Speech Recogntion in Asterisk to transcribe audio voice. The EAGI (Extended Asterisk Gateway Interface) program in this repository basically gets the audio input stream as a file descriptor, passes it to a Node.js Google Cloud Speech client and sets an Asterisk dialplan variable to return the transcription result to the dialplan.
+This repository is an example of how to use Google Speech Recogntion in Asterisk to transcribe audio voice.
 
-## Requirements
+Tools that are used here :
+- Asterisk EAGI (Extended Asterisk Gateway Interface), in bash
+- Node.js Google Cloud Speech client
+ 
+# Set up your Google Cloud Speech account and Node.js client
+1.  Select or create a Cloud Platform project.
 
-- Set up your Google Cloud Speech project along with a Service Account key at https://cloud.google.com/speech/
-- Install Node.js Google Cloud Speech client at https://github.com/googleapis/nodejs-speech
+    [Go to the projects page][projects]
 
-## How to use this repository
+1.  Enable billing for your project.
 
-### Asterisk
+    [Enable billing][billing]
+
+1.  Enable the Google Cloud Speech API API.
+
+    [Enable the API][enable_api]
+
+1.  [Set up authentication with a service account][auth] so you can access the API from your local workstation.
+
+Note : in `transcribeWithGoogle.eagi`, we assume that the generated Service Account `.JSON` file is stored in `/usr/local/node_programs/service_account_file.json`
+
+[projects]: https://console.cloud.google.com/project
+[billing]: https://support.google.com/cloud/answer/6293499#enable-billing
+[enable_api]: https://console.cloud.google.com/flows/enableapi?apiid=speech.googleapis.com
+[auth]: https://cloud.google.com/docs/authentication/getting-started
+
+## Install the client library
+    git clone https://github.com/googleapis/nodejs-speech.git
+    cd nodejs-speech
+    npm install --save @google-cloud/speech
+    
+Note : we assume that the `nodejs-speech` directory sits under `/usr/local/node_programs/`. Adjust to your configuration. 
+
+# Set up Asterisk
 
 Edit your `extensions.conf` according to the example given in this repository :
 
